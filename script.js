@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let notes = [];
     let currentUserId = 'demo_user_12345';
     let currentUserName = 'Demo User';
-    let currentUserAvatar = 'https://api.dicebear.com/7.x/bottts/svg?seed=demo';
+    let currentUserAvatar = 'https://api.dicebear.com/7.x/initials/svg?seed=Demo%20User&backgroundColor=0088cc,00a2e8,33b5e5&fontSize=40&bold=true';
     
     let currentView = 'list'; // 'list' or 'editor'
     let activeCategory = 'all'; // 'all', 'pinned', 'favorites', 'work', 'personal', 'ideas', 'archived'
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const user = tg.initDataUnsafe.user;
                 currentUserId = user.id.toString();
                 currentUserName = `${user.first_name} ${user.last_name || ''}`.trim();
-                currentUserAvatar = user.photo_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${user.id}`;
+                currentUserAvatar = user.photo_url || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUserName)}&backgroundColor=0088cc,00a2e8,33b5e5&fontSize=40&bold=true`;
                 console.log("Loaded actual Telegram user credentials:", currentUserId);
             } else {
                 // Otherwise load previously simulated developer credentials from local storage
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const simName = localStorage.getItem('sim_telegram_name');
         if (simId) currentUserId = simId;
         if (simName) currentUserName = simName;
-        currentUserAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUserId}`;
+        currentUserAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUserName)}&backgroundColor=0088cc,00a2e8,33b5e5&fontSize=40&bold=true`;
     }
 
     /**
@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('sim_telegram_name', simName);
                 currentUserId = simId;
                 currentUserName = simName;
-                currentUserAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUserId}`;
+                currentUserAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUserName)}&backgroundColor=0088cc,00a2e8,33b5e5&fontSize=40&bold=true`;
                 
                 userNameEl.textContent = currentUserName;
                 userAvatarEl.src = currentUserAvatar;
@@ -557,9 +557,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fileImportInput.addEventListener('change', handleNoteImport);
 
-        // Simulated Ads Reward Triggers
-        rewardAdBtn.addEventListener('click', () => simulateRewardedAd());
-        unlockPremiumBtn.addEventListener('click', () => simulateRewardedAd());
+        // Simulated & Real Ads Reward Triggers
+        function showRealOrSimulatedAd() {
+            if (typeof show_11220835 === 'function') {
+                triggerHaptic('medium');
+                showToast("Opening sponsored partner ad...", "ads_click");
+                try {
+                    show_11220835().then(() => {
+                        // Ad completed successfully!
+                        isPremiumThemesUnlocked = true;
+                        localStorage.setItem('telegram_notes_premium', 'true');
+                        triggerHaptic('success');
+                        checkPremiumStatus();
+                        rewardSuccessModal.style.display = 'flex';
+                        showToast("Premium Themes Unlocked!", "stars");
+                    }).catch(err => {
+                        console.error("Ad failed, falling back to simulation", err);
+                        simulateRewardedAd();
+                    });
+                } catch (err) {
+                    console.error("Error running ad function, falling back to simulation", err);
+                    simulateRewardedAd();
+                }
+            } else {
+                console.log("Real Ads SDK not loaded yet or blocked, showing simulation");
+                simulateRewardedAd();
+            }
+        }
+
+        rewardAdBtn.addEventListener('click', () => showRealOrSimulatedAd());
+        unlockPremiumBtn.addEventListener('click', () => showRealOrSimulatedAd());
         
         rewardCloseBtn.addEventListener('click', () => {
             rewardSuccessModal.style.display = 'none';
@@ -660,8 +687,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Calculate icons
             let iconsHTML = '';
-            if (note.isPinned) iconsHTML += '<span class="material-symbols-rounded pin-icon">push_pin</span>';
-            if (note.isFavorite) iconsHTML += '<span class="material-symbols-rounded favorite-icon">star</span>';
+            if (note.isPinned) iconsHTML += '<span class="emoji-icon pin-icon">📌</span>';
+            if (note.isFavorite) iconsHTML += '<span class="emoji-icon favorite-icon">⭐</span>';
 
             // Generate category labels
             const categoryTagHTML = note.category && note.category !== 'all' 
@@ -677,8 +704,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 visibleChecklist.forEach(item => {
                     previewHTML += `
                         <div class="card-checklist-item ${item.checked ? 'checked' : ''}">
-                            <span class="material-symbols-rounded">
-                                ${item.checked ? 'check_box' : 'check_box_outline_blank'}
+                            <span class="emoji-icon" style="font-size: 14px; margin-right: 4px;">
+                                ${item.checked ? '☑️' : '⬜'}
                             </span>
                             <span>${escapeHTML(item.text)}</span>
                         </div>
@@ -1263,11 +1290,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkPremiumStatus() {
         if (isPremiumThemesUnlocked) {
             premiumStatusBanner.className = 'premium-status unlocked';
-            premiumStatusBanner.innerHTML = '<span class="material-symbols-rounded">stars</span> <span>Premium Themes Unlocked! Enjoy pastel backgrounds.</span>';
+            premiumStatusBanner.innerHTML = '<span class="emoji-icon">⭐</span> <span>Premium Themes Unlocked! Enjoy pastel backgrounds.</span>';
             unlockPremiumBtn.style.display = 'none';
         } else {
             premiumStatusBanner.className = 'premium-status locked';
-            premiumStatusBanner.innerHTML = '<span class="material-symbols-rounded">lock</span> <span>Premium Themes Locked. Watch a rewarded ad to unlock them!</span>';
+            premiumStatusBanner.innerHTML = '<span class="emoji-icon">🔒</span> <span>Premium Themes Locked. Watch a rewarded ad to unlock them!</span>';
             unlockPremiumBtn.style.display = 'block';
         }
     }
@@ -1284,7 +1311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         adOverlay.innerHTML = `
             <div class="modal-card alert-card text-center" style="background: #111; color: white; padding: 30px;">
-                <span class="material-symbols-rounded" style="font-size: 48px; color: #ffb300; animation: spin 2s linear infinite;">play_circle</span>
+                <span class="emoji-icon" style="font-size: 48px; display: inline-block; animation: spin 2s linear infinite;">▶️</span>
                 <h3 style="margin: 16px 0 8px 0;">Sponsor Video Playing</h3>
                 <p style="font-size: 13px; opacity: 0.8;">Premium note skins are unlocking in <b id="ad-countdown" style="font-family: monospace; font-size: 16px; color: #b4c5ff;">3</b> seconds...</p>
                 <div style="width: 100%; background: #333; height: 4px; border-radius: 2px; margin-top: 20px; overflow: hidden;">
@@ -1349,9 +1376,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showToast(message, iconName = 'info') {
+        const iconMap = {
+            'lock': '🔒',
+            'stars': '⭐',
+            'download': '📥',
+            'upload': '📤',
+            'ads_click': '📢',
+            'info': 'ℹ️',
+            'cloud_done': '☁️',
+            'cloud_off': '⚠️',
+            'cloud_sync': '🔄',
+            'delete': '🗑️',
+            'check': '✅',
+            'error': '❌'
+        };
+        const emoji = iconMap[iconName] || iconName;
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.innerHTML = `<span class="material-symbols-rounded" style="font-size: 18px;">${iconName}</span><span>${message}</span>`;
+        toast.innerHTML = `<span class="emoji-icon" style="font-size: 18px; margin-right: 8px;">${emoji}</span><span>${message}</span>`;
         toastContainer.appendChild(toast);
         
         // Remove toast after animation finishes

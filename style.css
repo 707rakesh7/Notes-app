@@ -1286,7 +1286,7 @@ body.dark-mode .toast {
  * plain-text rendering and layout overlapping issues.
  */
 .material-symbols-rounded {
-    font-family: inherit !important;
+    font-family: 'Material Symbols Rounded' !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
@@ -1294,7 +1294,7 @@ body.dark-mode .toast {
     width: 24px;
     height: 24px;
     overflow: hidden;
-    line-height: normal !important;
+    line-height: 1 !important;
     text-indent: 0 !important;
     font-style: normal;
     text-transform: none;
@@ -1302,6 +1302,10 @@ body.dark-mode .toast {
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
 }
 
 .material-symbols-rounded svg, 

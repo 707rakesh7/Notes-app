@@ -27,7 +27,7 @@
         <!-- App Header (Telegram User Information & Cloud Sync Status) -->
         <header class="app-header">
             <div class="user-profile">
-                <img id="user-avatar" class="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=tgnotes" alt="Telegram Avatar">
+                <img id="user-avatar" class="user-avatar" src="https://api.dicebear.com/7.x/initials/svg?seed=Telegram%20User&backgroundColor=0088cc,00a2e8,33b5e5&fontSize=40&bold=true" alt="Telegram Avatar">
                 <div class="user-details">
                     <h3 id="user-name">Telegram User</h3>
                     <div class="sync-status">
@@ -38,10 +38,10 @@
             </div>
             <div class="header-actions">
                 <button id="theme-toggle" class="icon-btn" title="Toggle Theme" data-testtag="theme_toggle">
-                    <span class="material-symbols-rounded">dark_mode</span>
+                    <span class="emoji-icon">🌙</span>
                 </button>
                 <button id="settings-btn" class="icon-btn" title="Settings" data-testtag="settings_button">
-                    <span class="material-symbols-rounded">settings</span>
+                    <span class="emoji-icon">⚙️</span>
                 </button>
             </div>
         </header>
@@ -49,22 +49,22 @@
         <!-- Search Bar and Filter Section -->
         <section class="search-section">
             <div class="search-box">
-                <span class="material-symbols-rounded search-icon">search</span>
+                <span class="emoji-icon search-icon" style="font-size: 18px; margin-left: 12px; margin-right: 4px;">🔍</span>
                 <input type="text" id="search-input" placeholder="Search notes, tags, checklists..." data-testtag="search_input">
                 <button id="clear-search" class="clear-btn" style="display: none;">
-                    <span class="material-symbols-rounded">close</span>
+                    <span class="emoji-icon">❌</span>
                 </button>
             </div>
             
             <!-- Category Tabs Slider -->
             <div class="category-slider">
                 <button class="category-chip active" data-category="all">All</button>
-                <button class="category-chip" data-category="pinned"><span class="material-symbols-rounded text-icon">push_pin</span>Pinned</button>
-                <button class="category-chip" data-category="favorites"><span class="material-symbols-rounded text-icon">star</span>Favorites</button>
+                <button class="category-chip" data-category="pinned"><span class="emoji-icon text-icon" style="margin-right: 4px;">📌</span>Pinned</button>
+                <button class="category-chip" data-category="favorites"><span class="emoji-icon text-icon" style="margin-right: 4px;">⭐</span>Favorites</button>
                 <button class="category-chip" data-category="work">Work</button>
                 <button class="category-chip" data-category="personal">Personal</button>
                 <button class="category-chip" data-category="ideas">Ideas</button>
-                <button class="category-chip" data-category="archived"><span class="material-symbols-rounded text-icon">archive</span>Archive</button>
+                <button class="category-chip" data-category="archived"><span class="emoji-icon text-icon" style="margin-right: 4px;">📁</span>Archive</button>
             </div>
 
             <!-- Sorting Chips -->
@@ -82,31 +82,31 @@
         <main class="notes-dashboard" id="notes-grid" data-testtag="notes_grid">
             <!-- Dynamic Note Cards go here -->
             <div class="empty-state" id="empty-state">
-                <span class="material-symbols-rounded empty-icon">note_alt</span>
+                <span class="emoji-icon empty-icon" style="font-size: 48px; opacity: 0.7;">📝</span>
                 <h4>No Notes Found</h4>
                 <p>Create your first note using the floating add button below.</p>
                 <button id="empty-add-btn" class="btn primary-btn">
-                    <span class="material-symbols-rounded">add</span>Create Note
+                    <span class="emoji-icon" style="margin-right: 6px;">➕</span>Create Note
                 </button>
             </div>
         </main>
 
         <!-- Floating Add Note Button (M3 FAB) -->
         <button id="fab-add-note" class="m3-fab" title="Create New Note" data-testtag="add_note_button">
-            <span class="material-symbols-rounded">add</span>
+            <span class="emoji-icon" style="font-size: 24px; font-weight: bold;">➕</span>
         </button>
 
         <!-- Banner Ad Section (Bottom of app, non-obtrusive) -->
         <div class="banner-ad-container">
             <div class="ad-tag">ADVERTISEMENT</div>
             <div class="ad-content">
-                <span class="material-symbols-rounded ad-icon">campaign</span>
+                <span class="emoji-icon ad-icon" style="font-size: 24px;">📢</span>
                 <div class="ad-text">
                     <p class="ad-title">Telegram Ads Premium Partner</p>
                     <p class="ad-desc">Unlock premium pastel note themes by watching a short ad!</p>
                 </div>
                 <button id="reward-ad-btn" class="btn ad-action-btn" data-testtag="reward_ad_button">
-                    <span class="material-symbols-rounded">play_circle</span>Watch
+                    <span class="emoji-icon" style="margin-right: 4px;">▶️</span>Watch
                 </button>
             </div>
         </div>
@@ -118,35 +118,35 @@
             <!-- Header Toolbar -->
             <header class="editor-header">
                 <button id="editor-back" class="icon-btn" title="Back" data-testtag="editor_back">
-                    <span class="material-symbols-rounded">arrow_back</span>
+                    <span class="emoji-icon" style="font-size: 18px; font-weight: bold;">⬅️</span>
                 </button>
                 
                 <div class="editor-actions">
                     <button id="editor-pin" class="icon-btn" title="Pin Note">
-                        <span class="material-symbols-rounded">push_pin</span>
+                        <span class="emoji-icon">📌</span>
                     </button>
                     <button id="editor-favorite" class="icon-btn" title="Favorite Note">
-                        <span class="material-symbols-rounded">star</span>
+                        <span class="emoji-icon">⭐</span>
                     </button>
                     <button id="editor-archive" class="icon-btn" title="Archive Note">
-                        <span class="material-symbols-rounded">archive</span>
+                        <span class="emoji-icon">📁</span>
                     </button>
                     <button id="editor-more" class="icon-btn" title="More Actions">
-                        <span class="material-symbols-rounded">more_vert</span>
+                        <span class="emoji-icon">⋮</span>
                     </button>
                 </div>
             </header>
 
             <!-- Dropdown More Actions Menu -->
             <div id="more-actions-menu" class="dropdown-menu">
-                <button id="action-duplicate" class="menu-item"><span class="material-symbols-rounded">content_copy</span>Duplicate Note</button>
-                <button id="action-copy-text" class="menu-item"><span class="material-symbols-rounded">file_copy</span>Copy Note Text</button>
-                <button id="action-share" class="menu-item"><span class="material-symbols-rounded">share</span>Share Note</button>
+                <button id="action-duplicate" class="menu-item"><span class="emoji-icon" style="margin-right: 8px;">📋</span>Duplicate Note</button>
+                <button id="action-copy-text" class="menu-item"><span class="emoji-icon" style="margin-right: 8px;">📄</span>Copy Note Text</button>
+                <button id="action-share" class="menu-item"><span class="emoji-icon" style="margin-right: 8px;">🔗</span>Share Note</button>
                 <hr>
-                <button id="action-export-txt" class="menu-item"><span class="material-symbols-rounded">description</span>Export as TXT</button>
-                <button id="action-export-pdf" class="menu-item"><span class="material-symbols-rounded">picture_as_pdf</span>Export as PDF</button>
+                <button id="action-export-txt" class="menu-item"><span class="emoji-icon" style="margin-right: 8px;">📄</span>Export as TXT</button>
+                <button id="action-export-pdf" class="menu-item"><span class="emoji-icon" style="margin-right: 8px;">📕</span>Export as PDF</button>
                 <hr>
-                <button id="action-delete" class="menu-item text-danger"><span class="material-symbols-rounded">delete</span>Delete Note</button>
+                <button id="action-delete" class="menu-item text-danger"><span class="emoji-icon" style="margin-right: 8px;">🗑️</span>Delete Note</button>
             </div>
 
             <!-- Editor Form Content -->
@@ -172,27 +172,27 @@
                     </select>
                     
                     <div class="tags-input-container">
-                        <span class="material-symbols-rounded">local_offer</span>
+                        <span class="emoji-icon">🏷️</span>
                         <input type="text" id="note-tags-input" placeholder="Add tags (comma separated)">
                     </div>
                 </div>
 
                 <!-- Rich Text Format Toolbar -->
                 <div class="rich-text-toolbar">
-                    <button class="format-btn" data-command="bold" title="Bold">
-                        <span class="material-symbols-rounded">format_bold</span>
+                    <button class="format-btn" data-command="bold" title="Bold" style="font-weight: bold; font-family: sans-serif;">
+                        B
                     </button>
-                    <button class="format-btn" data-command="italic" title="Italic">
-                        <span class="material-symbols-rounded">format_italic</span>
+                    <button class="format-btn" data-command="italic" title="Italic" style="font-style: italic; font-family: sans-serif;">
+                        I
                     </button>
-                    <button class="format-btn" data-command="underline" title="Underline">
-                        <span class="material-symbols-rounded">format_underlined</span>
+                    <button class="format-btn" data-command="underline" title="Underline" style="text-decoration: underline; font-family: sans-serif;">
+                        U
                     </button>
                     <button class="format-btn" id="toolbar-checklist" title="Checklist / Todo">
-                        <span class="material-symbols-rounded">playlist_add_check</span>
+                        <span class="emoji-icon">☑️</span>
                     </button>
                     <button class="format-btn" id="toolbar-emoji" title="Insert Emoji">
-                        <span class="material-symbols-rounded">mood</span>
+                        <span class="emoji-icon">😀</span>
                     </button>
                 </div>
 
@@ -224,7 +224,7 @@
                     <span id="word-counter">0 words</span>
                 </div>
                 <div id="save-indicator" class="save-indicator">
-                    <span class="material-symbols-rounded">cloud_done</span> Saved
+                    <span class="emoji-icon">☁️</span> Saved
                 </div>
             </footer>
         </div>
@@ -236,13 +236,13 @@
             <header class="modal-header">
                 <h3>Settings & Sync</h3>
                 <button id="close-settings" class="icon-btn">
-                    <span class="material-symbols-rounded">close</span>
+                    <span class="emoji-icon">❌</span>
                 </button>
             </header>
             <div class="modal-body">
                 <!-- Telegram Identity Simulator (Crucial for Android Emulator + testing) -->
                 <div class="settings-section">
-                    <h4><span class="material-symbols-rounded text-icon">account_circle</span>Telegram Developer Simulator</h4>
+                    <h4><span class="emoji-icon text-icon" style="margin-right: 6px;">👤</span>Telegram Developer Simulator</h4>
                     <p class="section-desc">Test cloud-syncing on different identities inside the AI Studio emulator. In Telegram, this uses actual Telegram SDK credentials.</p>
                     
                     <div class="form-group">
@@ -254,13 +254,13 @@
                         <input type="text" id="sim-user-name" placeholder="John Doe">
                     </div>
                     <button id="save-sim-profile" class="btn primary-btn btn-sm">
-                        <span class="material-symbols-rounded">switch_account</span>Switch simulated user
+                        <span class="emoji-icon" style="margin-right: 4px;">🔄</span>Switch simulated user
                     </button>
                 </div>
 
                 <!-- Custom Firebase Setup -->
                 <div class="settings-section">
-                    <h4><span class="material-symbols-rounded text-icon">database</span>Firebase Credentials (Optional)</h4>
+                    <h4><span class="emoji-icon text-icon" style="margin-right: 6px;">🗄️</span>Firebase Credentials (Optional)</h4>
                     <p class="section-desc">By default, notes are securely stored offline. Input your Firebase Firestore keys to enable cross-device cloud synchronization.</p>
                     
                     <div class="form-group">
@@ -283,14 +283,14 @@
 
                 <!-- Backup & Import Actions -->
                 <div class="settings-section">
-                    <h4><span class="material-symbols-rounded text-icon">folder_zip</span>Backup & Import</h4>
+                    <h4><span class="emoji-icon text-icon" style="margin-right: 6px;">📦</span>Backup & Import</h4>
                     <p class="section-desc">Manage your notes safely using local file backup options.</p>
                     <div class="row">
                         <button id="btn-export-all" class="btn outlined-btn flex-grow">
-                            <span class="material-symbols-rounded">download</span>Export Notes (TXT)
+                            <span class="emoji-icon" style="margin-right: 4px;">⬇️</span>Export Notes (TXT)
                         </button>
                         <button id="btn-import-trigger" class="btn outlined-btn flex-grow">
-                            <span class="material-symbols-rounded">upload</span>Import TXT Note
+                            <span class="emoji-icon" style="margin-right: 4px;">⬆️</span>Import TXT Note
                         </button>
                         <input type="file" id="file-import-input" accept=".txt" style="display: none;">
                     </div>
@@ -298,14 +298,14 @@
 
                 <!-- Premium Theme Panel (Locked by default, unlocked by rewarded ad) -->
                 <div class="settings-section">
-                    <h4><span class="material-symbols-rounded text-icon">palette</span>Premium Color Themes</h4>
+                    <h4><span class="emoji-icon text-icon" style="margin-right: 6px;">🎨</span>Premium Color Themes</h4>
                     <p class="section-desc">Unlock custom luxury pastel note backgrounds.</p>
                     <div id="premium-status-banner" class="premium-status locked">
-                        <span class="material-symbols-rounded">lock</span>
+                        <span class="emoji-icon" style="margin-right: 6px;">🔒</span>
                         <span>Premium Themes Locked. Watch a rewarded ad to unlock them!</span>
                     </div>
                     <button id="unlock-premium-btn" class="btn primary-btn full-width">
-                        <span class="material-symbols-rounded">rewarded_ads</span>Watch Ad to Unlock Themes
+                        <span class="emoji-icon" style="margin-right: 6px;">⭐</span>Watch Ad to Unlock Themes
                     </button>
                 </div>
             </div>
@@ -332,7 +332,7 @@
     <div id="reward-success-modal" class="modal">
         <div class="modal-card alert-card text-center">
             <div class="reward-logo">
-                <span class="material-symbols-rounded">stars</span>
+                <span class="emoji-icon" style="font-size: 40px;">⭐</span>
             </div>
             <h3>Premium Themes Unlocked!</h3>
             <p>Thank you for supporting us. You can now use all pastels and luxury background gradients in your notes!</p>
