@@ -1280,3 +1280,110 @@ body.dark-mode .toast {
         border-radius: var(--border-radius-lg);
     }
 }
+
+/* 
+ * Icon fallback and SVG styling fixes to prevent 
+ * plain-text rendering and layout overlapping issues.
+ */
+.material-symbols-rounded {
+    font-family: inherit !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    line-height: normal !important;
+    text-indent: 0 !important;
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
+
+.material-symbols-rounded svg, 
+.svg-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    fill: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Rich Text Formatting Toolbar Fixes */
+.rich-text-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: rgba(128, 128, 128, 0.05);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 12px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.format-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    border-radius: var(--border-radius-xs);
+    border: none;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.format-btn:hover, .format-btn:active {
+    background-color: rgba(128, 128, 128, 0.12);
+}
+
+.format-btn .material-symbols-rounded,
+.format-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+}
+
+/* Ensure editor actions are perfectly aligned and do not overlap */
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    height: 64px;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.editor-actions .icon-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+}
+
+/* Toast custom alignment */
+.toast .material-symbols-rounded {
+    width: 18px !important;
+    height: 18px !important;
+}
+.toast svg {
+    width: 18px !important;
+    height: 18px !important;
+}
