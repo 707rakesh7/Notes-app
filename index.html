@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Telegram Notes</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Firebase SDK (Compat Version for Vanilla JS) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Material Symbols and Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- Local Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-mode">
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- App Header (Telegram User Information & Cloud Sync Status) -->
+        <header class="app-header">
+            <div class="user-profile">
+                <img id="user-avatar" class="user-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=tgnotes" alt="Telegram Avatar">
+                <div class="user-details">
+                    <h3 id="user-name">Telegram User</h3>
+                    <div class="sync-status">
+                        <span class="status-dot offline"></span>
+                        <span id="sync-text">Offline Mode</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme" data-testtag="theme_toggle">
+                    <span class="material-symbols-rounded">dark_mode</span>
+                </button>
+                <button id="settings-btn" class="icon-btn" title="Settings" data-testtag="settings_button">
+                    <span class="material-symbols-rounded">settings</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Search Bar and Filter Section -->
+        <section class="search-section">
+            <div class="search-box">
+                <span class="material-symbols-rounded search-icon">search</span>
+                <input type="text" id="search-input" placeholder="Search notes, tags, checklists..." data-testtag="search_input">
+                <button id="clear-search" class="clear-btn" style="display: none;">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            
+            <!-- Category Tabs Slider -->
+            <div class="category-slider">
+                <button class="category-chip active" data-category="all">All</button>
+                <button class="category-chip" data-category="pinned"><span class="material-symbols-rounded text-icon">push_pin</span>Pinned</button>
+                <button class="category-chip" data-category="favorites"><span class="material-symbols-rounded text-icon">star</span>Favorites</button>
+                <button class="category-chip" data-category="work">Work</button>
+                <button class="category-chip" data-category="personal">Personal</button>
+                <button class="category-chip" data-category="ideas">Ideas</button>
+                <button class="category-chip" data-category="archived"><span class="material-symbols-rounded text-icon">archive</span>Archive</button>
+            </div>
+
+            <!-- Sorting Chips -->
+            <div class="sorting-row">
+                <span class="sort-label">Sort by:</span>
+                <div class="sort-chips">
+                    <button class="sort-chip active" data-sort="newest">Newest</button>
+                    <button class="sort-chip" data-sort="oldest">Oldest</button>
+                    <button class="sort-chip" data-sort="alphabetical">A-Z</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Notes Dashboard Grid -->
+        <main class="notes-dashboard" id="notes-grid" data-testtag="notes_grid">
+            <!-- Dynamic Note Cards go here -->
+            <div class="empty-state" id="empty-state">
+                <span class="material-symbols-rounded empty-icon">note_alt</span>
+                <h4>No Notes Found</h4>
+                <p>Create your first note using the floating add button below.</p>
+                <button id="empty-add-btn" class="btn primary-btn">
+                    <span class="material-symbols-rounded">add</span>Create Note
+                </button>
+            </div>
+        </main>
+
+        <!-- Floating Add Note Button (M3 FAB) -->
+        <button id="fab-add-note" class="m3-fab" title="Create New Note" data-testtag="add_note_button">
+            <span class="material-symbols-rounded">add</span>
+        </button>
+
+        <!-- Banner Ad Section (Bottom of app, non-obtrusive) -->
+        <div class="banner-ad-container">
+            <div class="ad-tag">ADVERTISEMENT</div>
+            <div class="ad-content">
+                <span class="material-symbols-rounded ad-icon">campaign</span>
+                <div class="ad-text">
+                    <p class="ad-title">Telegram Ads Premium Partner</p>
+                    <p class="ad-desc">Unlock premium pastel note themes by watching a short ad!</p>
+                </div>
+                <button id="reward-ad-btn" class="btn ad-action-btn" data-testtag="reward_ad_button">
+                    <span class="material-symbols-rounded">play_circle</span>Watch
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Editor Panel (Slide Up Full-screen Responsive Sheet) -->
+    <div id="note-editor-modal" class="editor-modal">
+        <div class="editor-container">
+            <!-- Header Toolbar -->
+            <header class="editor-header">
+                <button id="editor-back" class="icon-btn" title="Back" data-testtag="editor_back">
+                    <span class="material-symbols-rounded">arrow_back</span>
+                </button>
+                
+                <div class="editor-actions">
+                    <button id="editor-pin" class="icon-btn" title="Pin Note">
+                        <span class="material-symbols-rounded">push_pin</span>
+                    </button>
+                    <button id="editor-favorite" class="icon-btn" title="Favorite Note">
+                        <span class="material-symbols-rounded">star</span>
+                    </button>
+                    <button id="editor-archive" class="icon-btn" title="Archive Note">
+                        <span class="material-symbols-rounded">archive</span>
+                    </button>
+                    <button id="editor-more" class="icon-btn" title="More Actions">
+                        <span class="material-symbols-rounded">more_vert</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dropdown More Actions Menu -->
+            <div id="more-actions-menu" class="dropdown-menu">
+                <button id="action-duplicate" class="menu-item"><span class="material-symbols-rounded">content_copy</span>Duplicate Note</button>
+                <button id="action-copy-text" class="menu-item"><span class="material-symbols-rounded">file_copy</span>Copy Note Text</button>
+                <button id="action-share" class="menu-item"><span class="material-symbols-rounded">share</span>Share Note</button>
+                <hr>
+                <button id="action-export-txt" class="menu-item"><span class="material-symbols-rounded">description</span>Export as TXT</button>
+                <button id="action-export-pdf" class="menu-item"><span class="material-symbols-rounded">picture_as_pdf</span>Export as PDF</button>
+                <hr>
+                <button id="action-delete" class="menu-item text-danger"><span class="material-symbols-rounded">delete</span>Delete Note</button>
+            </div>
+
+            <!-- Editor Form Content -->
+            <div class="editor-body">
+                <!-- Color Theme Palette Selector -->
+                <div class="color-picker-container">
+                    <span class="color-picker-label">Label Color:</span>
+                    <div class="color-palette" id="color-palette">
+                        <!-- Colors populated via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Title Input -->
+                <input type="text" id="note-title-input" class="editor-title" placeholder="Title" autocomplete="off" data-testtag="note_title_input">
+                
+                <!-- Category and Tags row -->
+                <div class="editor-metadata-row">
+                    <select id="note-category-select" class="metadata-select">
+                        <option value="all">Uncategorized</option>
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="ideas">Ideas</option>
+                    </select>
+                    
+                    <div class="tags-input-container">
+                        <span class="material-symbols-rounded">local_offer</span>
+                        <input type="text" id="note-tags-input" placeholder="Add tags (comma separated)">
+                    </div>
+                </div>
+
+                <!-- Rich Text Format Toolbar -->
+                <div class="rich-text-toolbar">
+                    <button class="format-btn" data-command="bold" title="Bold">
+                        <span class="material-symbols-rounded">format_bold</span>
+                    </button>
+                    <button class="format-btn" data-command="italic" title="Italic">
+                        <span class="material-symbols-rounded">format_italic</span>
+                    </button>
+                    <button class="format-btn" data-command="underline" title="Underline">
+                        <span class="material-symbols-rounded">format_underlined</span>
+                    </button>
+                    <button class="format-btn" id="toolbar-checklist" title="Checklist / Todo">
+                        <span class="material-symbols-rounded">playlist_add_check</span>
+                    </button>
+                    <button class="format-btn" id="toolbar-emoji" title="Insert Emoji">
+                        <span class="material-symbols-rounded">mood</span>
+                    </button>
+                </div>
+
+                <!-- Custom Quick Emojis Row -->
+                <div id="emoji-picker" class="quick-emojis-bar" style="display: none;">
+                    <span class="emoji-option">💡</span>
+                    <span class="emoji-option">✅</span>
+                    <span class="emoji-option">📌</span>
+                    <span class="emoji-option">⭐</span>
+                    <span class="emoji-option">📝</span>
+                    <span class="emoji-option">🔥</span>
+                    <span class="emoji-option">⚠️</span>
+                    <span class="emoji-option">🎯</span>
+                    <span class="emoji-option">💻</span>
+                    <span class="emoji-option">❤️</span>
+                </div>
+
+                <!-- Editable Content Area (Combines text formatting and checklists) -->
+                <div class="editor-content-wrapper">
+                    <div id="note-body-content" class="editor-textarea" contenteditable="true" placeholder="Start typing your note here..." data-testtag="note_body_input"></div>
+                </div>
+            </div>
+
+            <!-- Footer Meta Info -->
+            <footer class="editor-footer">
+                <div class="char-word-counter">
+                    <span id="char-counter">0 characters</span>
+                    <span class="dot-separator">•</span>
+                    <span id="word-counter">0 words</span>
+                </div>
+                <div id="save-indicator" class="save-indicator">
+                    <span class="material-symbols-rounded">cloud_done</span> Saved
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Settings and Dev Simulator Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h3>Settings & Sync</h3>
+                <button id="close-settings" class="icon-btn">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </header>
+            <div class="modal-body">
+                <!-- Telegram Identity Simulator (Crucial for Android Emulator + testing) -->
+                <div class="settings-section">
+                    <h4><span class="material-symbols-rounded text-icon">account_circle</span>Telegram Developer Simulator</h4>
+                    <p class="section-desc">Test cloud-syncing on different identities inside the AI Studio emulator. In Telegram, this uses actual Telegram SDK credentials.</p>
+                    
+                    <div class="form-group">
+                        <label for="sim-user-id">Simulated Telegram User ID</label>
+                        <input type="number" id="sim-user-id" placeholder="87654321">
+                    </div>
+                    <div class="form-group">
+                        <label for="sim-user-name">Simulated User Name</label>
+                        <input type="text" id="sim-user-name" placeholder="John Doe">
+                    </div>
+                    <button id="save-sim-profile" class="btn primary-btn btn-sm">
+                        <span class="material-symbols-rounded">switch_account</span>Switch simulated user
+                    </button>
+                </div>
+
+                <!-- Custom Firebase Setup -->
+                <div class="settings-section">
+                    <h4><span class="material-symbols-rounded text-icon">database</span>Firebase Credentials (Optional)</h4>
+                    <p class="section-desc">By default, notes are securely stored offline. Input your Firebase Firestore keys to enable cross-device cloud synchronization.</p>
+                    
+                    <div class="form-group">
+                        <label for="fb-api-key">API Key</label>
+                        <input type="text" id="fb-api-key" placeholder="AIzaSy...">
+                    </div>
+                    <div class="form-group">
+                        <label for="fb-project-id">Project ID</label>
+                        <input type="text" id="fb-project-id" placeholder="my-notes-app-123">
+                    </div>
+                    <div class="form-group">
+                        <label for="fb-app-id">App ID</label>
+                        <input type="text" id="fb-app-id" placeholder="1:12345:web:abcd...">
+                    </div>
+                    <div class="row">
+                        <button id="save-fb-config" class="btn secondary-btn flex-grow">Save Config</button>
+                        <button id="reset-fb-config" class="btn text-danger-btn">Reset to Demo</button>
+                    </div>
+                </div>
+
+                <!-- Backup & Import Actions -->
+                <div class="settings-section">
+                    <h4><span class="material-symbols-rounded text-icon">folder_zip</span>Backup & Import</h4>
+                    <p class="section-desc">Manage your notes safely using local file backup options.</p>
+                    <div class="row">
+                        <button id="btn-export-all" class="btn outlined-btn flex-grow">
+                            <span class="material-symbols-rounded">download</span>Export Notes (TXT)
+                        </button>
+                        <button id="btn-import-trigger" class="btn outlined-btn flex-grow">
+                            <span class="material-symbols-rounded">upload</span>Import TXT Note
+                        </button>
+                        <input type="file" id="file-import-input" accept=".txt" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Premium Theme Panel (Locked by default, unlocked by rewarded ad) -->
+                <div class="settings-section">
+                    <h4><span class="material-symbols-rounded text-icon">palette</span>Premium Color Themes</h4>
+                    <p class="section-desc">Unlock custom luxury pastel note backgrounds.</p>
+                    <div id="premium-status-banner" class="premium-status locked">
+                        <span class="material-symbols-rounded">lock</span>
+                        <span>Premium Themes Locked. Watch a rewarded ad to unlock them!</span>
+                    </div>
+                    <button id="unlock-premium-btn" class="btn primary-btn full-width">
+                        <span class="material-symbols-rounded">rewarded_ads</span>Watch Ad to Unlock Themes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Beautiful Confirmation Dialog Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-card alert-card">
+            <header class="modal-header">
+                <h3 id="confirm-title">Are you sure?</h3>
+            </header>
+            <div class="modal-body">
+                <p id="confirm-message">This action cannot be undone.</p>
+                <div class="modal-footer row">
+                    <button id="confirm-cancel" class="btn secondary-btn flex-grow">Cancel</button>
+                    <button id="confirm-ok" class="btn danger-btn flex-grow">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reward Ad Success Splash Screen -->
+    <div id="reward-success-modal" class="modal">
+        <div class="modal-card alert-card text-center">
+            <div class="reward-logo">
+                <span class="material-symbols-rounded">stars</span>
+            </div>
+            <h3>Premium Themes Unlocked!</h3>
+            <p>Thank you for supporting us. You can now use all pastels and luxury background gradients in your notes!</p>
+            <button id="reward-close" class="btn primary-btn full-width">Amazing!</button>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Area -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="firebase.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
